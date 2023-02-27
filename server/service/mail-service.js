@@ -1,0 +1,48 @@
+const nodemailer = require('nodemailer');
+const userModel = require('../models/user-model');
+
+class MailService{
+
+    constructor(){
+        
+        this.transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT,
+            secure: false,
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASSWORD
+            }
+        })
+        
+    }
+
+    async sendActivationMail(to, link){
+        await this.transporter.sendMail({
+            from: process.env.SMTP_USER,
+            to,
+            subject: 'Activation link: ' + process.env.API_URL,
+            text: '',
+            html: 
+                `
+                    <div>
+                        <h1>To activate, click on the link</h1>
+                        <a href="${link}">${link}</a>
+                    </div>
+                `
+        })
+    }
+
+    async activate(activationLink){
+        const user = await userModel.findOne({activationLink})
+
+        if(!user){
+            throw new Error('It is not correct activate link')
+        }
+
+        user.isActivated = true
+        await user.save()
+    }
+}
+
+module.exports = new MailService();
