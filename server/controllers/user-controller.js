@@ -1,4 +1,5 @@
 const userService = require('../service/user-service')
+const mailService = require('../service/mail-service')
 
 class UserController{
     async registration(req, res, next){
@@ -31,9 +32,13 @@ class UserController{
 
     async activate(req, res, next){
         try{
+            const activationLink = req.params.link;
 
+            await mailService.activate(activationLink);
+
+            return res.redirect(process.env.CLIENT_URL);
         } catch(e) {
-            
+            console.log(e)
         }
     }
 
