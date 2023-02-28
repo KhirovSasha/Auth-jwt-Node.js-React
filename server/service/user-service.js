@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const tokenService = require('../service/token-service');
 const UserDto = require('../dtos/user-dto')
-const mailService = require('../service/mail-service')
+const mailService = require('../service/mail-service');
 
 class UserService{
     async registration(email, password){
@@ -28,6 +28,17 @@ class UserService{
             ...tokens,
             user: userDto
         }
+    }
+
+    async activate(activationLink){
+        const user = await userModel.findOne({activationLink})
+
+        if(!user){
+            throw new Error('It is not correct activate link')
+        }
+
+        user.isActivated = true
+        await user.save()
     }
 }
 
