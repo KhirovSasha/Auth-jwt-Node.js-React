@@ -34,7 +34,7 @@ class UserController{
         try{
             const activationLink = req.params.link;
 
-            await mailService.activate(activationLink);
+            await userService.activate(activationLink);
 
             return res.redirect(process.env.CLIENT_URL);
         } catch(e) {

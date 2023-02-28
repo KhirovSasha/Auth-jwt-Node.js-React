@@ -32,17 +32,6 @@ class MailService{
                 `
         })
     }
-
-    async activate(activationLink){
-        const user = await userModel.findOne({activationLink})
-
-        if(!user){
-            throw new Error('It is not correct activate link')
-        }
-
-        user.isActivated = true
-        await user.save()
-    }
 }
 
 module.exports = new MailService();
