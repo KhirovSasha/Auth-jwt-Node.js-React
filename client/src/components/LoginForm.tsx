@@ -1,9 +1,10 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useState, useContext} from 'react';
+import {Context} from '../index';
 
 const LoginForm: FC = () => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
-
+    const {store} = useContext(Context);
 
     return (
         <div>
@@ -14,13 +15,17 @@ const LoginForm: FC = () => {
                 placeholder='Email'
             />
             <input
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 value={password}
                 type="password"
                 placeholder='Password'
             />
-            <button>Login</button>
-            <button>Registration</button>
+            <button onClick={() => store.login(email, password)}>
+                Login
+            </button>
+            <button onClick={() => store.registration(email, password)}>
+                Registration
+            </button>
         </div>
     );
 };
